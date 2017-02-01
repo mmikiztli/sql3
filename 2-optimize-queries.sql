@@ -16,3 +16,12 @@ WHERE mentor_candidates.city IN ('Budapest', 'Miskolc', 'Krakow') AND birth_year
 Don't give custom names for the indexes, but when you create a multiple column index, please list the
 columns in alphavetical order.
 */
+
+CREATE INDEX mentor_candidates_birth_year_city_idx
+ON mentor_candidates (city, birth_year);
+
+CREATE INDEX mentor_candidates_city_idx
+ON mentor_candidates (city);
+
+CREATE INDEX schools_city_idx
+ON schools (city);

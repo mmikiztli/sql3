@@ -13,3 +13,8 @@ Write an SQL file that:
 
 How should you generate an SQL big like this? :-) Our advices is just one word: Python...
 */
+
+BEGIN;
+TRUNCATE TABLE  mentor_candidates;
+\COPY mentor_candidates FROM 'candidates.txt' (DELIMITER(','));
+COMMIT;
