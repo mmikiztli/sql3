@@ -33,17 +33,20 @@ class Candidate:
             self.level), str(self.birth_year)]
 
     @classmethod
-    def generate_db(cls, filename, num):
-        with open(filename, "w") as f:
+    def writing_into_sql(cls, filename, num):
+        with open(filename, "a") as f:
+            f.write("\nBEGIN;\n")
+            f.write("TRUNCATE TABLE  mentor_candidates;\n")
             for i in range(num):
                 candidate = cls()
-                line = candidate.generate_record()
-                f.writelines(
-                    l + ',' if l != line[-1] else l + '\n' for l in line)
+                f.write("INSERT INTO \"mentor_candidates\" (first_name, last_name, phone_number, email, city, level, birth_year) VALUES ('%s','%s','%s','%s','%s',%d,%d);\n"
+                        % (candidate.first_name, candidate.last_name, candidate.generate_phone_num(),
+                           candidate.generate_email(), candidate.city, candidate.level, candidate.birth_year))
+            f.write("COMMIT;\n")
 
 
 def main():
-    return Candidate.generate_db('candidates.txt', 10000)
+    return Candidate.writing_into_sql('1-fake-mentor-candidates.sql', 10000)
 
 if __name__ == '__main__':
     main()
