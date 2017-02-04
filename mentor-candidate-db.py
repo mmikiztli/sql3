@@ -25,6 +25,7 @@ class Candidate:
         self.level = level
         self.city = city
         self.domain = domain
+        self.phone_number = self.generate_phone_num()
 
     def generate_email(self):
         return self.first_name + "." + self.last_name + '@' + self.domain
@@ -33,22 +34,22 @@ class Candidate:
         return "+" + "".join(str(random.randint(0, 9)) for i in range(10))
 
     def generate_record(self):
-        return [self.first_name, self.last_name, self.generate_phone_num(), self.generate_email(), self.city, str(
+        return [self.first_name, self.last_name, self.phone_number, self.generate_email(), self.city, str(
             self.level), str(self.birth_year)]
 
     @classmethod
-    def generate_candidate(cls):
+    def generate_random_candidate(cls):
         return cls(
             random.choice(cls.first_name_list), random.choice(
-                cls.last_name_list), random.randint(
-                    cls.birth_year_list[0], cls.birth_year_list[1]),
-                  random.randint(cls.level_list[0], cls.level_list[1]), random.choice(cls.city_list), random.choice(cls.domain_list))
+                cls.last_name_list), random.randint(*
+                                                    cls.birth_year_list),
+                  random.randint(*cls.level_list), random.choice(cls.city_list), random.choice(cls.domain_list))
 
     @classmethod
     def generate_db(cls, filename, num):
         with open(filename, "w") as f:
             for i in range(num):
-                candidate = cls.generate_candidate()
+                candidate = cls.generate_random_candidate()
                 line = candidate.generate_record()
                 f.writelines(
                     l + ',' if l != line[-1] else l + '\n' for l in line)
