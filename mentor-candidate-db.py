@@ -14,13 +14,18 @@ class Candidate:
 
     domain_list = ['gmai.com', 'hotmail.com', 'citromail.hu', 'upc.com']
 
-    def __init__(self):
-        self.first_name = random.choice(self.first_name_list)
-        self.last_name = random.choice(self.last_name_list)
-        self.birth_year = random.randint(1960, 1995)
-        self.level = random.randint(1, 10)
-        self.city = random.choice(self.city_list)
-        self.domain = random.choice(self.domain_list)
+    level_list = [1, 10]
+
+    birth_year_list = [1960, 1995]
+
+    def __init__(self, first_name, last_name, birth_year, level, city, domain):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.birth_year = birth_year
+        self.level = level
+        self.city = city
+        self.domain = domain
+        self.phone_number = self.generate_phone_num()
 
     def generate_email(self):
         return self.first_name + "." + self.last_name + '@' + self.domain
@@ -29,8 +34,16 @@ class Candidate:
         return "+" + "".join(str(random.randint(0, 9)) for i in range(10))
 
     def generate_record(self):
-        return [self.first_name, self.last_name, self.generate_phone_num(), self.generate_email(), self.city, str(
+        return [self.first_name, self.last_name, self.phone_number, self.generate_email(), self.city, str(
             self.level), str(self.birth_year)]
+
+    @classmethod
+    def generate_random_candidate(cls):
+        return cls(
+            random.choice(cls.first_name_list), random.choice(
+                cls.last_name_list), random.randint(*
+                                                    cls.birth_year_list),
+                  random.randint(*cls.level_list), random.choice(cls.city_list), random.choice(cls.domain_list))
 
     @classmethod
     def writing_into_sql(cls, filename, num):
@@ -38,9 +51,9 @@ class Candidate:
             f.write("\nBEGIN;\n")
             f.write("TRUNCATE TABLE  mentor_candidates;\n")
             for i in range(num):
-                candidate = cls()
+                candidate = cls.generate_random_candidate()
                 f.write("INSERT INTO \"mentor_candidates\" (first_name, last_name, phone_number, email, city, level, birth_year) VALUES ('%s','%s','%s','%s','%s',%d,%d);\n"
-                        % (candidate.first_name, candidate.last_name, candidate.generate_phone_num(),
+                        % (candidate.first_name, candidate.last_name, candidate.phone_number,
                            candidate.generate_email(), candidate.city, candidate.level, candidate.birth_year))
             f.write("COMMIT;\n")
 
