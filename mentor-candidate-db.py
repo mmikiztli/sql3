@@ -14,13 +14,17 @@ class Candidate:
 
     domain_list = ['gmai.com', 'hotmail.com', 'citromail.hu', 'upc.com']
 
-    def __init__(self):
-        self.first_name = random.choice(self.first_name_list)
-        self.last_name = random.choice(self.last_name_list)
-        self.birth_year = random.randint(1960, 1995)
-        self.level = random.randint(1, 10)
-        self.city = random.choice(self.city_list)
-        self.domain = random.choice(self.domain_list)
+    level_list = [1, 10]
+
+    birth_year_list = [1960, 1995]
+
+    def __init__(self, first_name, last_name, birth_year, level, city, domain):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.birth_year = birth_year
+        self.level = level
+        self.city = city
+        self.domain = domain
 
     def generate_email(self):
         return self.first_name + "." + self.last_name + '@' + self.domain
@@ -33,10 +37,18 @@ class Candidate:
             self.level), str(self.birth_year)]
 
     @classmethod
+    def generate_candidate(cls):
+        return cls(
+            random.choice(cls.first_name_list), random.choice(
+                cls.last_name_list), random.randint(
+                    cls.birth_year_list[0], cls.birth_year_list[1]),
+                  random.randint(cls.level_list[0], cls.level_list[1]), random.choice(cls.city_list), random.choice(cls.domain_list))
+
+    @classmethod
     def generate_db(cls, filename, num):
         with open(filename, "w") as f:
             for i in range(num):
-                candidate = cls()
+                candidate = cls.generate_candidate()
                 line = candidate.generate_record()
                 f.writelines(
                     l + ',' if l != line[-1] else l + '\n' for l in line)
